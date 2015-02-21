@@ -32,7 +32,7 @@ namespace _1800Contacts_Project_Tests
         {
             Assert.IsNull(schedule.Head);
             Assert.AreEqual(0, schedule.NumCourses);
-            schedule.Head = head;
+            schedule.AddCourse(head);
             Assert.AreEqual(head, schedule.Head);
             Assert.AreEqual(1, schedule.NumCourses);
         }
@@ -42,7 +42,7 @@ namespace _1800Contacts_Project_Tests
         {
             Assert.IsNull(schedule.Tail);
             Assert.AreEqual(0, schedule.NumCourses);
-            schedule.Tail = tail;
+            schedule.AddCourse(tail);
             Assert.AreEqual(tail, schedule.Tail);
             Assert.AreEqual(1, schedule.NumCourses);
         }
@@ -53,6 +53,13 @@ namespace _1800Contacts_Project_Tests
             Assert.AreEqual(0, schedule.NumCourses);
             Assert.IsTrue(schedule.AddCourse(head));
             Assert.AreEqual(1, schedule.NumCourses);
+            Assert.IsTrue(schedule.AddCourse(tail));
+            Assert.AreEqual(2, schedule.NumCourses);
+            Assert.AreEqual(head, schedule.Head);
+            Assert.AreEqual(tail, schedule.Tail);
+            Course course = new Course(name3, tailName);
+            Assert.IsTrue(schedule.AddCourse(course));
+            Assert.AreEqual(course, schedule.Tail);
         }
 
         [TestMethod]
@@ -62,6 +69,14 @@ namespace _1800Contacts_Project_Tests
             Assert.AreEqual(1, schedule.NumCourses);
             Assert.IsTrue(schedule.RemoveCourse(head));
             Assert.AreEqual(0, schedule.NumCourses);
+        }
+
+        [TestMethod]
+        public void TestFindPrerequisite()
+        {
+            schedule.AddCourse(head);
+            schedule.AddCourse(tail);
+            Assert.AreEqual(head, schedule.FindPrerequisite(tail));
         }
 
         [TestMethod]
