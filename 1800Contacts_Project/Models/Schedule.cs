@@ -14,6 +14,26 @@ namespace _1800Contacts_Project.Models
 
         public Schedule() { }
 
+        public bool AddCourse(Course course)
+        {
+            bool success = false;
+            
 
+
+            return success;
+        }
+
+        public bool RemoveCourse(Course course)
+        {
+            bool success = false;
+
+
+            return success;
+        }
+
+        public string GetSchedule(string[] courses)
+        {
+            return null;
+        }
     }
 }

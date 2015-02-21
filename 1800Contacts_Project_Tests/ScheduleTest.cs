@@ -7,17 +7,17 @@ namespace _1800Contacts_Project_Tests
     [TestClass]
     public class ScheduleTest
     {
-        private Schedule schedule;
-        private Course head;
-        private Course tail;
-        private string headName = "head";
-        private string tailName = "tail";
+        public Schedule schedule;
+        public Course head;
+        public Course tail;
+        public string headName = "head";
+        public string tailName = "tail";
 
-        private string name1 = "name1";
-        private string name2 = "name2";
-        private string name3 = "name3";
-        private string name4 = "name4";
-        private string name5 = "name5";
+        public string name1 = "name1";
+        public string name2 = "name2";
+        public string name3 = "name3";
+        public string name4 = "name4";
+        public string name5 = "name5";
 
         [TestInitialize]
         public void SetUp()

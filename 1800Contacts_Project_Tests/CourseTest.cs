@@ -7,12 +7,12 @@ namespace _1800Contacts_Project_Tests
     [TestClass]
     public class CourseTest
     {
-        private Course course1;
-        private Course course2;
-        private Course course3;
-        private string name1 = "TestCourse1";
-        private string name2 = "TestCourse2";
-        private string name3 = "TestCourse3";
+        public Course course1;
+        public Course course2;
+        public Course course3;
+        public string name1 = "TestCourse1";
+        public string name2 = "TestCourse2";
+        public string name3 = "TestCourse3";
 
         [TestInitialize]
         public void SetUp()
