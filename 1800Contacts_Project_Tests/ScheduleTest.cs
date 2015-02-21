@@ -35,38 +35,38 @@ namespace _1800Contacts_Project_Tests
         [TestMethod]
         public void TestHead()
         {
-            Assert.IsNull(schedule.GetHead());
-            Assert.AreEqual(0, schedule.GetNumCourses());
-            schedule.SetHead(head);
-            Assert.AreEqual(head, schedule.GetHead());
-            Assert.AreEqual(1, schedule.GetNumCourses());
+            Assert.IsNull(schedule.Head);
+            Assert.AreEqual(0, schedule.NumCourses);
+            schedule.Head = head;
+            Assert.AreEqual(head, schedule.Head);
+            Assert.AreEqual(1, schedule.NumCourses);
         }
 
         [TestMethod]
         public void TestTail()
         {
-            Assert.IsNull(schedule.GetTail());
-            Assert.AreEqual(0, schedule.GetNumCourses());
-            schedule.SetTail(tail);
-            Assert.AreEqual(tail, schedule.GetTail());
-            Assert.AreEqual(1, schedule.GetNumCourses());
+            Assert.IsNull(schedule.Tail);
+            Assert.AreEqual(0, schedule.NumCourses);
+            schedule.Tail = tail;
+            Assert.AreEqual(tail, schedule.Tail);
+            Assert.AreEqual(1, schedule.NumCourses);
         }
 
         [TestMethod]
         public void TestAddCourse()
         {
-            Assert.AreEqual(0, schedule.GetNumCourses());
+            Assert.AreEqual(0, schedule.NumCourses);
             Assert.IsTrue(schedule.AddCourse(head));
-            Assert.AreEqual(1, schedule.GetNumCourses());
+            Assert.AreEqual(1, schedule.NumCourses);
         }
 
         [TestMethod]
         public void TestRemoveCourse()
         {
             schedule.AddCourse(head);
-            Assert.AreEqual(1, schedule.GetNumCourses());
+            Assert.AreEqual(1, schedule.NumCourses);
             Assert.IsTrue(schedule.RemoveCourse(head));
-            Assert.AreEqual(0, schedule.GetNumCourses());
+            Assert.AreEqual(0, schedule.NumCourses);
         }
 
         [TestMethod]
