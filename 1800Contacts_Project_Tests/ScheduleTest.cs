@@ -13,11 +13,6 @@ namespace _1800Contacts_Project_Tests
         private string headName = "head";
         private string tailName = "tail";
 
-        private Course course1;
-        private Course course2;
-        private Course course3;
-        private Course course4;
-        private Course course5;
         private string name1 = "name1";
         private string name2 = "name2";
         private string name3 = "name3";
@@ -72,49 +67,38 @@ namespace _1800Contacts_Project_Tests
         [TestMethod]
         public void TestOneCourse()
         {
-            course1 = new Course(name1);
-            schedule.AddCourse(course1);
-            Assert.AreEqual(name1, schedule.GetSchedule());
+            Assert.AreEqual(name1, schedule.GetSchedule(new string[] {name1}));
         }
 
         [TestMethod]
         public void TestCourseWithPrerequisite()
         {
-            course1 = new Course(name1, name2);
-            course2 = new Course(name2);
-            schedule.AddCourse(course1);
-            schedule.AddCourse(course2);
-
+            string course1 = name1 + ": " + name2;
             string expected = name2 + ", " + name1;
-            Assert.AreEqual(expected, schedule.GetSchedule());
+            Assert.AreEqual(expected, schedule.GetSchedule(new string[] {course1}));
         }
 
         [TestMethod]
         public void TestMultipleCoursesWithPrerequisites()
         {
-            course1 = new Course(name1, name2);
-            course2 = new Course(name2, name3);
-            course3 = new Course(name3);
-            course4 = new Course(name4, name2);
-            schedule.AddCourse(course1);
-            schedule.AddCourse(course2);
-            schedule.AddCourse(course3);
-            schedule.AddCourse(course4);
+            string course1 = getCourseString(name1, name2);
+            string course2 = getCourseString(name2, name3);
+            string course3 = name3;
+            string course4 = getCourseString(name4, name2);
 
             string expected = name3 + ", " + name2 + ", " + name1 + ", " + name4;
-            Assert.AreEqual(expected, schedule.GetSchedule());
+            Assert.AreEqual(expected, schedule.GetSchedule(new string[] { course1, course2, course3, course4 }));
         }
 
         [TestMethod]
         public void TestCircularDependency()
         {
-            course1 = new Course(name1, name2);
-            course2 = new Course(name2, name1);
+            string course1 = getCourseString(name1, name2);
+            string course2 = getCourseString(name2, name1);
 
-            schedule.AddCourse(course1);
             try
             {
-                schedule.AddCourse(course2);
+                schedule.GetSchedule(new string[] { course1, course2 });
                 Assert.Fail("Schedule with circular dependency was allowed.");
             }
             catch (ArgumentException e)
@@ -126,21 +110,25 @@ namespace _1800Contacts_Project_Tests
         [TestMethod]
         public void TestMultipleCoursesWithCircularDependency()
         {
-            course1 = new Course(name1, name4);
-            course2 = new Course(name2, name1);
-            course3 = new Course(name3, name4);
-            course4 = new Course(name4, name2);
-            schedule.AddCourse(course4);
-            schedule.AddCourse(course3);
-            schedule.AddCourse(course2);
+            string course1 = getCourseString(name1, name4);
+            string course2 = getCourseString(name2, name1);
+            string course3 = getCourseString(name3, name4);
+            string course4 = getCourseString(name4, name2);
+
             try
             {
-                schedule.AddCourse(course1);
+                schedule.GetSchedule(new string[] { course1, course2, course3, course4 });
+                Assert.Fail("Schedule with circular dependency was allowed.");
             }
             catch (ArgumentException e)
             {
                 Assert.AreEqual("Course causes circular dependency!", e.Message);
             }
+        }
+
+        private string getCourseString(string name1, string name2)
+        {
+            return name1 + ": " + name2;
         }
     }
 }

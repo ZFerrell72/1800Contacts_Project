@@ -13,5 +13,7 @@ namespace _1800Contacts_Project.Models
         public int NumCourses { get; set; }
 
         public Schedule() { }
+
+
     }
 }
