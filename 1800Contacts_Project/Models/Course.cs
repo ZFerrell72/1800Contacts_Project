@@ -40,14 +40,6 @@ namespace _1800Contacts_Project.Models
                 {
                     equals = false;
                 }
-                if ((Prerequisite == null && course.Prerequisite != null) || (Prerequisite != null && course.Prerequisite == null))
-                {
-                    equals = false;
-                }
-                else if (Prerequisite != null && course.Prerequisite != null)
-                {
-                    if (!Prerequisite.Equals(course.Prerequisite)) { equals = false; }
-                }
             }
 
             return equals;

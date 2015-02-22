@@ -40,6 +40,7 @@ namespace _1800Contacts_Project_Tests
         [TestMethod]
         public void TestTail()
         {
+            tail = new Course(tailName);
             Assert.IsNull(schedule.Tail);
             Assert.AreEqual(0, schedule.NumCourses);
             schedule.AddCourse(tail);
@@ -89,8 +90,9 @@ namespace _1800Contacts_Project_Tests
         public void TestCourseWithPrerequisite()
         {
             string course1 = name1 + ": " + name2;
+            string course2 = name2;
             string expected = name2 + ", " + name1;
-            Assert.AreEqual(expected, schedule.GetSchedule(new string[] {course1}));
+            Assert.AreEqual(expected, schedule.GetSchedule(new string[] {course1, course2}));
         }
 
         [TestMethod]
@@ -101,7 +103,7 @@ namespace _1800Contacts_Project_Tests
             string course3 = name3;
             string course4 = getCourseString(name4, name2);
 
-            string expected = name3 + ", " + name2 + ", " + name1 + ", " + name4;
+            string expected = name3 + ", " + name2 + ", " + name4 + ", " + name1;
             Assert.AreEqual(expected, schedule.GetSchedule(new string[] { course1, course2, course3, course4 }));
         }
 

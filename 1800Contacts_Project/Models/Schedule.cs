@@ -19,45 +19,41 @@ namespace _1800Contacts_Project.Models
         {
             bool success = false;
 
-            if (NumCourses == 0)
-            {
-                Head = course;
-                Tail = course;
-                success = true;
-            }
-            else if (course.Prerequisite == null)
+            if (course.Prerequisite == null)
             {
                 PutAtHead(course);
                 success = true;
             }
             else
             {
-                if (Tail.Name.Equals(course.Prerequisite))
+                Course prerequisiteCourse = FindPrerequisite(course);
+                if (prerequisiteCourse == null)
                 {
-                    PutAtTail(course);
-                    success = true;
+                    // Prerequisite course has not been added yet.
+                    // Create course for prereq
+                    AddPrerequisite(course);
+                    success = AddCourse(course);
+                    if (success)
+                    {
+                        NumCourses--;
+                    }
                 }
                 else
                 {
-                    Course prerequisiteCourse = FindPrerequisite(course);
-                    if (prerequisiteCourse == null)
-                    {
-                        // Prerequisite course has not been added yet.
-                        // Add to tail
-                        PutAtTail(course);
-                        success = true;
-                    }
-                    else
-                    {
-                        InsertAfterPrerequisite(prerequisiteCourse, course);
-                        success = true;
-                    }
+                    InsertAfterPrerequisite(prerequisiteCourse, course);
+                    success = true;
                 }
             }
 
             if (success) { NumCourses++; }
 
             return success;
+        }
+
+        public void AddPrerequisite(Course course)
+        {
+            Course prerequisiteCourse = new Course(course.Prerequisite);
+            AddCourse(prerequisiteCourse);
         }
 
         public bool RemoveCourse(Course course)
@@ -93,17 +89,110 @@ namespace _1800Contacts_Project.Models
             return success;
         }
 
+        public void UpdateCourse(Course dupCourse, Course course)
+        {
+            dupCourse.Prerequisite = course.Prerequisite;
+            Course prerequisiteCourse = FindPrerequisite(dupCourse);
+            if (prerequisiteCourse == null)
+            {
+                AddPrerequisite(dupCourse);
+            }
+            else
+            {
+                prerequisiteCourse.Next = dupCourse;
+                dupCourse.Previous = prerequisiteCourse;
+            }
+        }
+
         public string GetSchedule(string[] courses)
         {
-            return null;
+            for (int i = 0; i < courses.Length; i++)
+            {
+                string[] courseDesc = courses[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                Course course = null;
+                if (courseDesc.Length == 1)
+                {
+                    course = new Course(courseDesc[0]);
+                }
+                else
+                {
+                    course = new Course(courseDesc[0], courseDesc[1]);
+                }
+                Course dupCourse = null;
+                if ((dupCourse = containsCourse(course)) == null)
+                {
+                    AddCourse(course);
+                }
+                else if(course.Prerequisite != null)
+                {
+                    UpdateCourse(dupCourse, course);
+                }
+            }
+
+            if (containsCircularDependency())
+            {
+                throw new ArgumentException("Course causes circular dependency!");
+            }
+
+            return this.ToString();
+        }
+
+        public bool containsCircularDependency()
+        {
+            bool containsCircularDependency = false;
+
+            int index = 0;
+            Course currentCourse = Head;
+            while (!containsCircularDependency && currentCourse.Next != null && NumCourses > 1)
+            {
+                if (index >= NumCourses)
+                {
+                    containsCircularDependency = true;
+                }
+                else
+                {
+                    currentCourse = currentCourse.Next;
+                    index++;
+                }
+            }
+
+            return containsCircularDependency;
+        }
+
+        public Course containsCourse(Course course)
+        {
+            bool containsCourse = false;
+            int index = 0;
+            Course currentCourse = Head;
+            while (index < NumCourses && !containsCourse)
+            {
+                if (currentCourse.Equals(course))
+                {
+                    containsCourse = true;
+                }
+                else
+                {
+                    index++;
+                    currentCourse = currentCourse.Next;
+                }
+            }
+            return currentCourse;
         }
 
         // Shoves coure to the head of the Linked List.
         public void PutAtHead(Course course)
         {
-            Head.Previous = course;
-            course.Next = Head;
-            Head = course;
+            if (Head == null)
+            {
+                Head = course;
+                Tail = course;
+            }
+            else
+            {
+                Head.Previous = course;
+                course.Next = Head;
+                Head = course;
+            }
         }
 
         // Adds course to the tail of the Linked List.
@@ -125,6 +214,7 @@ namespace _1800Contacts_Project.Models
                 {
                     targetCourse = currentCourse;
                 }
+                currentCourse = currentCourse.Next;
                 index++;
             }
             return targetCourse;
@@ -132,11 +222,33 @@ namespace _1800Contacts_Project.Models
 
         public void InsertAfterPrerequisite(Course prerequisiteCourse, Course course)
         {
-            Course nextCourse = prerequisiteCourse.Next;
+            if (prerequisiteCourse.Equals(Tail))
+            {
+                Tail = course;
+            }
+            else
+            {
+                Course nextCourse = prerequisiteCourse.Next;
+                course.Next = nextCourse;
+                nextCourse.Previous = course;
+            }
             prerequisiteCourse.Next = course;
             course.Previous = prerequisiteCourse;
-            course.Next = nextCourse;
-            nextCourse.Previous = course;
+        }
+
+        public override string ToString()
+        {
+            Course currentCourse = Head;
+            string schedule = "";
+            int index = 0;
+            while (index < NumCourses && currentCourse != null)
+            {
+                schedule += currentCourse.Name;
+                if (currentCourse.Next != null) { schedule += ", "; }
+                currentCourse = currentCourse.Next;
+                index++;
+            }
+            return schedule;
         }
     }
 }
